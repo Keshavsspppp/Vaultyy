@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/*
+  Vaultly design tokens — warm, editorial.
+  Paper surfaces, ink text, hairline borders, a single terracotta accent,
+  serif display type for titles and a clean sans for everything else.
+*/
+:root {
+  --background: #f5f1e8; /* paper */
+  --foreground: #1f1b16; /* ink */
+  --surface: #fdfbf6; /* cards, panels */
+  --surface-2: #ece6d8; /* wells, chips */
+  --border: #d9d0c1; /* hairlines */
+  --border-strong: #b9ad9a;
+  --muted: #776d60;
+  --primary: #9a3b1f; /* terracotta */
+  --primary-hover: #7f2f16;
+  --primary-soft: #f2dfd3;
+  --primary-soft-hover: #ead0be;
+  --selected: #efe4cc;
+  --hover: #ede7da;
+  --danger: #a33a2c;
+  --ink-overlay: rgba(31, 27, 22, 0.94);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-hover: var(--primary-soft-hover);
+  --color-selected: var(--selected);
+  --color-hover: var(--hover);
+  --color-danger: var(--danger);
+  --color-ink-overlay: var(--ink-overlay);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display type: serif with optical sizing, used for page titles and dialogs. */
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 72, "SOFT" 30;
+  letter-spacing: -0.01em;
+}
+
+/* Small-caps style labels for section headers and table columns. */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Subtle paper grain so large empty areas do not feel flat. */
+.paper {
+  background-color: var(--background);
+  background-image: radial-gradient(rgba(31, 27, 22, 0.035) 0.6px, transparent 0.6px);
+  background-size: 6px 6px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9bfae transparent;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 140ms ease-out;
+}

@@ -1,0 +1,6 @@
+# Vaultly stores private files; only the marketing surface should be crawled.
+User-agent: *
+Disallow: /files
+Disallow: /s/
+Disallow: /api/
+Allow: /$

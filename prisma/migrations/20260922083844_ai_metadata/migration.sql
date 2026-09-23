@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Node" ADD COLUMN "aiStatus" TEXT;
+ALTER TABLE "Node" ADD COLUMN "aiSummary" TEXT;
+ALTER TABLE "Node" ADD COLUMN "aiTags" TEXT;
+ALTER TABLE "Node" ADD COLUMN "aiVersion" INTEGER;

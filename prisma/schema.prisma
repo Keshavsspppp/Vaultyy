@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String?  // null for accounts created via Google sign-in
+  image        String?
+  storageUsed  Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  nodes    Node[]
+  shares   Share[]
+  versions FileVersion[]
+}
+
+/// A file or a folder. Folders have type = "FOLDER" and no storageKey.
+model Node {
+  id             String    @id @default(cuid())
+  name           String
+  type           String // "FILE" | "FOLDER"
+  mimeType       String?
+  size           Int       @default(0)
+  storageKey     String?   @unique // mirrors the current FileVersion
+  uploadComplete Boolean   @default(true)
+  currentVersion Int       @default(1)
+
+  // AI-generated metadata for the current version (see src/lib/ai.ts)
+  aiSummary String?
+  aiTags    String? // JSON array of strings
+  aiStatus  String? // "pending" | "done" | "failed" | "skipped"
+  aiVersion Int? // version number the summary was generated for
+  starred        Boolean   @default(false)
+  trashedAt      DateTime?
+  lastAccessedAt DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Node?   @relation("Tree", fields: [parentId], references: [id], onDelete: Cascade)
+  children Node[]  @relation("Tree")
+
+  shares    Share[]
+  shareLink ShareLink?
+  versions  FileVersion[]
+
+  @@index([ownerId, parentId])
+  @@index([ownerId, trashedAt])
+  @@index([name])
+}
+
+/// Direct share of a node with a specific user.
+model Share {
+  id        String   @id @default(cuid())
+  nodeId    String
+  node      Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String // "VIEWER" | "EDITOR"
+  createdAt DateTime @default(now())
+
+  @@unique([nodeId, userId])
+  @@index([userId])
+}
+
+/// "Anyone with the link" access to a node.
+model ShareLink {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  nodeId    String   @unique
+  node      Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  role      String   @default("VIEWER")
+  createdAt DateTime @default(now())
+}
+
+/// One stored revision of a file. The Node points at the current one via currentVersion.
+model FileVersion {
+  id          String   @id @default(cuid())
+  nodeId      String
+  node        Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  version     Int
+  storageKey  String   @unique
+  size        Int      @default(0)
+  mimeType    String?
+  pending     Boolean  @default(false) // true until the upload is verified
+  createdAt   DateTime @default(now())
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([nodeId, version])
+}

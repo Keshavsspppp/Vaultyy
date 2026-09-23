@@ -1,0 +1,46 @@
+# Everything the image builds itself or must never contain.
+
+# Dependencies and build output (rebuilt inside the image)
+node_modules
+.next
+out
+build
+*.tsbuildinfo
+next-env.d.ts
+src/generated
+
+# Local data and secrets
+.env
+.env.*
+!.env.example
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+prisma/*.db-shm
+uploads
+.test-uploads
+*.pem
+
+# Tests and coverage
+tests
+vitest.config.mts
+coverage
+
+# Docker / VCS / editor / tooling metadata
+Dockerfile
+docker-compose.yml
+.dockerignore
+.git
+.gitignore
+.vscode
+.idea
+.claude
+.vercel
+
+# Docs and OS files
+README.md
+AGENTS.md
+CLAUDE.md
+*.log
+.DS_Store
+Thumbs.db
